@@ -1,7 +1,17 @@
 import * as React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "../lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogTrigger,
+  DialogPortal,
+  DialogOverlay
+} from "./ui/dialog";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -30,6 +40,7 @@ interface ShareModalProps {
   modalText?: string;
   triggerClassName?: string;
   triggerText?: string;
+  triggerAriaLabel?: string;
 }
 
 const shareButtons = [
@@ -87,7 +98,8 @@ export function ShareModal({
   modalTitle = "Share this content",
   modalText = "Choose a platform to share this content",
   triggerClassName,
-  triggerText = "Share"
+  triggerText = "Share",
+  triggerAriaLabel = "Open share dialog"
 }: ShareModalProps) {
   const [open, setOpen] = React.useState(isOpen ?? false);
   
@@ -108,22 +120,21 @@ export function ShareModal({
   const [firstShareButtonRef, setFirstShareButtonRef] = React.useState<HTMLButtonElement | null>(null);
 
   return (
-    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
-      <Dialog.Trigger asChild>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
         <button
           className={cn(
             "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2",
             triggerClassName
           )}
+          aria-label={triggerAriaLabel}
         >
           {triggerText}
         </button>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay 
-          className="fixed inset-0 z-50 bg-zinc-950/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" 
-        />
-        <Dialog.Content 
+      </DialogTrigger>
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogContent 
           className={cn(
             "fixed left-[50%] top-[50%] z-50 grid w-[calc(100%-2rem)] sm:w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-2 sm:gap-4 border bg-background p-0 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
             className
@@ -133,17 +144,11 @@ export function ShareModal({
             event.preventDefault();
             onClose?.();
           }}
-          aria-labelledby="share-modal-title"
-          aria-describedby="share-modal-description"
         >
-          <div className="flex flex-col space-y-1.5 p-4 sm:p-6 pb-2">
-            <Dialog.Title id="share-modal-title" className="text-lg font-semibold leading-none">
-              {modalTitle}
-            </Dialog.Title>
-            <Dialog.Description id="share-modal-description" className="text-sm text-muted-foreground">
-              {modalText}
-            </Dialog.Description>
-          </div>
+          <DialogHeader className="p-4 sm:p-6 pb-2">
+            <DialogTitle>{modalTitle}</DialogTitle>
+            <DialogDescription>{modalText}</DialogDescription>
+          </DialogHeader>
 
           <div className="p-4 sm:p-6 pt-2" role="group" aria-label="Share options">
             <div className="grid grid-cols-4 md:grid-cols-7 gap-4 items-center justify-items-center">
@@ -203,16 +208,16 @@ export function ShareModal({
             </div>
           </div>
 
-          <Dialog.Close 
+          <DialogClose 
             ref={closeButtonRef}
             className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
             aria-label="Close share dialog"
           >
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          </DialogClose>
+        </DialogContent>
+      </DialogPortal>
+    </Dialog>
   );
 }

@@ -32,17 +32,18 @@ const SocialShareIntegration = () => {
         <h3>Individual Share Buttons:</h3>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '20px' }}>
           {[
-            { Button: TwitterShareButton, Icon: TwitterIcon, name: 'Twitter' },
-            { Button: FacebookShareButton, Icon: FacebookIcon, name: 'Facebook' },
-            { Button: LinkedinShareButton, Icon: LinkedinIcon, name: 'LinkedIn' },
-            { Button: WhatsappShareButton, Icon: WhatsappIcon, name: 'WhatsApp' },
-            { Button: EmailShareButton, Icon: EmailIcon, name: 'Email' },
-          ].map(({ Button, Icon, name }) => (
+            { Button: TwitterShareButton, Icon: TwitterIcon, name: 'Twitter', ariaLabel: 'Share on Twitter' },
+            { Button: FacebookShareButton, Icon: FacebookIcon, name: 'Facebook', ariaLabel: 'Share on Facebook' },
+            { Button: LinkedinShareButton, Icon: LinkedinIcon, name: 'LinkedIn', ariaLabel: 'Share on LinkedIn' },
+            { Button: WhatsappShareButton, Icon: WhatsappIcon, name: 'WhatsApp', ariaLabel: 'Share on WhatsApp' },
+            { Button: EmailShareButton, Icon: EmailIcon, name: 'Email', ariaLabel: 'Share via Email' },
+          ].map(({ Button, Icon, name, ariaLabel }) => (
             <Button
               key={name}
               url={shareUrl}
               title={title}
               className="inline-flex items-center justify-center transition-colors hover:opacity-80 h-10 w-10"
+              aria-label={ariaLabel}
             >
               <Icon size={32} round />
             </Button>
